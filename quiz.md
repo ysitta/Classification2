@@ -38,7 +38,7 @@ For example, our boss wants to know the number of default or not for each purpos
 
 ## 1.1 Know your business question
 
-As a data scientist who will help the analyst took the decision, first thing that should we do is know what kind of problem we want to solve. Based on the data and its explanation, let us identify the bank loans that are likely to default, hence we will predict if the default variable in the data will be `yes` or `no`, then the target variable that will be used is `default`.
+As a data scientist who will help the management take the decision, first thing that should we do is know what kind of problem we want to solve. Based on the data and its explanation, let us identify the bank loans that are likely to default, hence we will predict if the default variable in the data will be `yes` or `no`, then the target variable that will be used is `default`.
 
 # 2 Cross Validation
 
@@ -47,6 +47,7 @@ Before we build our model, we should split the dataset into train and test data.
 ```
 # your code here
 ```
+
 ## 2.1 Check the proportion of our target variable
 
 In this phase, please check the target variable on `data_train$default` proportion using `table()` or `prop.table()` function
@@ -60,6 +61,7 @@ Based on the proportion of the target variable above, we can conclude that our t
 ```
 # your code here
 ```
+
 # 3 Decision Tree
 
 ## 3.1 Decision Tree Model Fitting
