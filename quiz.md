@@ -1,14 +1,10 @@
-Congratulation! This is the end of Classification in Machine Learning 2. The last part of this course is closed by filling this quiz. In this quiz, you will use the loan dataset. The data is stored as csv file in this repository as loan.csv file. The dataset is downloaded from [UCI Machine Learning](https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data)). 
+Congratulation! This is the end of Classification in Machine Learning 2. The last part of this course is closed by quiz assessment. In this quiz, you will use the loan dataset. The data is stored as csv file in this repository as loan.csv file. The dataset is downloaded from [UCI Machine Learning](https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data)). 
 
-To accomplish this assignment, you need to build your classification model using naive bayes, decision tree and random forest algorithms by following these steps:
+To complete this assignment, you will need to build your classification model using naive bayes, decision tree and random forest algorithms by following these steps:
 
 # 1 Data Exploration
 
-Please load and investigate the data given `loan.csv` and assign it named `loan`, then investigate the data using `str()` or `glimpse()` function.
-
-```
-# your code here
-```
+Please load and investigate the data given `loan.csv` and assign it to `loan` object, then investigate the data using `str()` or `glimpse()` function.
 
 The loan data consists of 1000 observations and  17 variables. Loan dataset is a bank data that shows historical data of customer who are likely to default or not. The description of each features is explained below:
 
@@ -24,66 +20,43 @@ The loan data consists of 1000 observations and  17 variables. Loan dataset is a
 - `dependents`: Number of people being liable to provide maintenance for
 - `phone`: Between none and yes (registered under customer name)
 
-For example, our boss wants to know the number of default or not for each purpose of loan. So, let us do some data aggregation to get the answer.
-
-```
-# your code
-```
+Let's say for example we are instructed to investigate the number of default customers for each loan purpose. Let us do some data aggregation to get the answer.
 
 1. Based on the exploration above, what is the highest number of purpose to not default?
-  - [] furniture/applicances
-  - [] car
-  - [] business
-  - [] education
+  - [ ] furniture/applicances
+  - [ ] car
+  - [ ] business
+  - [ ] education
 
 ## 1.1 Know your business question
 
-As a data scientist who will help the management take the decision, first thing that should we do is know what kind of problem we want to solve. Based on the data and its explanation, let us identify the bank loans that are likely to default, hence we will predict if the default variable in the data will be `yes` or `no`, then the target variable that will be used is `default`.
+As a data scientist you will develop a model that aid management in making decision. First thing we need to know is what kind of business question that we want to solve. Based on the data our data, let us identify a high risk customers. We will try to predict if given a set of predictors, how does we model `default` variable.
 
 # 2 Cross Validation
 
-Before we build our model, we should split the dataset into train and test data. In this step, please split the data into 80% train and 20% test proportion use `sample()`function, `set.seed(100)`, and store it as `data_train` and `data_test`
-
-```
-# your code here
-```
+Before we build our model, we should split the dataset into train and test data. In this step, please split the data into 80% train and 20% test proportion use `sample()`function, `set.seed(100)`, and store it as `data_train` and `data_test`.
 
 ## 2.1 Check the proportion of our target variable
 
-In this phase, please check the target variable on `data_train$default` proportion using `table()` or `prop.table()` function
+To make sure we have splitted the class target properly, let's check the proportion of `data_train$default` using `table()` and `prop.table()` function.
 
-```
-# your code here
-```
-
-Based on the proportion of the target variable above, we can conclude that our target variable is not balance, hence we should balance it first before do the cross validation. Please balance the proportion of the target variable on `data_train` using `downSample()` function from `caret` package.
-
-```
-# your code here
-```
+Based on the proportion of the target variable above, we can conclude that our target variable can be considered to be imblance, hence we should try to down sample it first. Please balance the proportion of the target variable on `data_train` using `downSample()` function from `caret` package.
 
 # 3 Decision Tree
 
 ## 3.1 Decision Tree Model Fitting
 
-After we have splitted our data into `data_train` and `data_test`, let's build our first model of decision tree using `ctree()` function and store it as `model_dt` object. To tune our model, please set the `mincriterion = 0.10`. 
-```
-# your code here
-```
+After we have splitted our data into `data_train` and `data_test`, let's build our first model of decision tree using `ctree()` function and store it under `model_dt` object. To tune our model, let us set the `mincriterion = 0.10` parameter. 
 
 ## 3.2 Decision Tree Quiz
 
 2. In our decision model, the goals of setting the mincriterion = 0.10 is to ...
-  - [] To do the pruning, we let the tree which has maximum p-value <= 0.10 to split the node
-  - [] To do the pruning, we let the tree which has maximum p-value <= 0.90 to split the node
-  - [] To do the pruning, we let the tree which has maximum 10% data in the terminal nodes
-  - [] To do the pruning, we let the tree which has maximum 10% data in the terminal nodes
+  - [ ] To prune our model, we let the tree that has maximum p-value <= 0.10 to split the node
+  - [ ] To prune our model, we let the tree that has maximum p-value <= 0.90 to split the node
+  - [ ] To prune our model, we let the tree that has maximum 10% of the data in the terminal nodes
+  - [ ] To prune our model, we let the tree that has maximum 10% of the data in the terminal nodes
 
-To get a picture of our model, please plot the model, and use the `type = "simple"`
-
-```
-# your code here
-```
+To get a picture of our model, try to plot the model, and use the `type = "simple"` parameter.
 
 ## 3.3 Predict on data train and test
 
@@ -96,144 +69,103 @@ To get our prediction, please predict the model towards `data_train` and `data_t
 
 # 3.4 Model Evaluation
 
-The last part of build the model is having to know whether our model is quite good or not, so we should evaluate our model performance. Please use the `confusionMatrix()` to get several model performance. Then, compare the result using `data_train` and `data_test`.
+The last part of build the model will be evaluating our model performance. To do this, we can use the `confusionMatrix()` in order to get your model performance. Create two confusion matrix using our in-sample data (`data_train`) and out-of-sample data (`data_test`) you have prepared earlier, and compared both performance.
 
-```
-# your code here
-```
 3. From the decision tree performance above, we can conclude that our decision tree model is ...
-  - [] Quite good
-  - [] Overfitting
-  - [] Underfitting
+  - [ ] Overall balanced
+  - [ ] Overfitting
+  - [ ] Underfitting
 
 
 # 4 Random Forest
 ## 4.1 Random forest model fitting
-Now, given our second model using another algorithm, that is random forest with these specifications :    
+
+Now let's try to explore random forest model we have prepared and saved in `model_rf.RDS`. The model is built with the following hyperparameter:
 
 - set.seed(100) # the seed number   
 - number = 5  # the number of k-fold cross validation   
 - repeats = 3 # the number of the repeatation of iteration  
 
-The model has been saved in `model_rf.RDS`. Please just load the .RDS file in the chunk below using `readRDS()` function.
-
-```
-model_rf <- 
-```
+In your environment, load the random forest model under `model_rf` object using `readRDS()` function.
 
 ## 4.2 Random Forest Quiz
-4. Which of the following are among the advantages of a random forest? Select all that apply. 
-  - []  Automatic feature selection 
-  - []  Reduce bias in a model as it is the aggregate of many decision trees, hence a significantly lower risk of overfitting compared to a decision tree 
-  - []  It generates an internal unbiased estimate of out-of-box error 
+4. Which of the following are NOT among the advantages of random forest model?
+  - [ ] Automatic feature selection  
+  - [ ] It is a relatively fast model to compared to decision tree
+  - [ ] Reduce bias in a model as it is the aggregate multiple decision trees  
+  - [ ] It generates an unbiased estimate of out-of-box error  
 
-Check the summary of the final model we built using `model_rf$finalModel`
+Now check the summary of the final model we built using `model_rf$finalModel`.
 
-```
-# your code here
-```
 5. From the summary of `model_rf$finalModel` above, the Out of Bag error rate from our model is 33.61%, what does this mean?
-  - [] We have error 33.61% for our unseen data
-  - [] We have error 33.61% for our train data
-  - [] We have error 33.61% for our loan data
+  - [ ] We have error 33.61% of our unseen data
+  - [ ] We have error 33.61% of our train data
+  - [ ] We have error 33.61% of our loan data
+  - [ ] We have error 33.61% of our in-sample data
 
-After built the model, let's predict the `data_train` and `data_test` based on `model_rf`, then please choose the `type = "raw"`
-
-```
-# your code here
-```
+After built the model, let's predict the `data_train` and `data_test` based on `model_rf`, then please choose the `type = "raw"`.
 
 ## 4.3 Model evaluation
 
-Next, let's evaluate the random forest we built using `confusionMatrix()`
+Next, let's evaluate the random forest we built using `confusionMatrix()`. Try to evaluate the performance of random forest model. How do you evaluate the model performance?
 
-```
-# your code here
-```
+There are also other form of evaluation in random forest model, we can check which variable has a high significance to the prediction. We can check it using `varImp()` function and passed in to the `plot()` to get the visualization.
 
-## 4.4 Variable importance
-
-In random forest, we can check what is the variable influence the model most. We can check it using `varImp()` function
-
-```
-# your code here
-```
-
-6. From the output above, What is the most important variable based on our model?
-  - [] checking_balance
-  - [] months_loan_duration
-  - [] amount
+6. From the plot you have created, which is the most important variable?
+  - [ ] checking_balance
+  - [ ] months_loan_duration
+  - [ ] amount
+  - [ ] purpose
 
   
 # 5 Naive Bayes
 
-## 5.1 Naive Bayes Quiz
+The last model we are trying to compare to is Naive Bayes model. There are several advantages in using this model, namely a few:  
+- The model is relatively fast to train  
+- It is estimating a probabilistic prediction  
+- It can handle irrelevant features  
 
-7. The following below are the characteristics of Naive Bayes, except
-  - [] Assume that among the predictor variables are independent 
-  - [] Assume that among the target and predictor variables are independent
-  - [] Skweness due to data scarcity
+7. The following below are the characteristics of Naive Bayes, except...
+  - [ ] Assume that among the predictor variables are independent  
+  - [ ] Assume that between target and predictor variables are independent  
+  - [ ] Skeweness due to data scarcity  
   
-## 5.2 Naive Bayes model fitting
+## 5.1 Naive Bayes model fitting
 
-Finally, we arrived at the last model that is naive bayes. Build a naive bayes model using `naiveBayes()` function from `e1071` package, then set the `laplace = 1`.
+Now let's build a naive bayes model using `naiveBayes()` function from `e1071` package, then set the `laplace` parameter as 1. Store the model under `model_naive` before moving on to next section.
 
-```
-# your code here
-```
+## 5.2 Predict the naive bayes model, using data train and data test
 
-## 5.3 Predict the naive bayes model, using data train and data test
-
-After we built the naive bayes model, then we can predict the `data_test` based on `model_naive` and use `type = "raw"`
-
-```
-# your code here
-```
-
-Now, let us take a look to ROC and AUC performance, use the `prediction()` function from `ROCR` package to compare the positive class in `pred_naive` (`pred_naive[,2]`) with the actual data (`data_test$default`) and store it as `pred_roc` object.
+Using our test dataset we have created earlier, try to predict using `model_naive` and use `type="raw"`. The prediction will then results in a probabilities of positive class happening for each test dataset. Now, let us take a look to ROC and AUC performance, use the `prediction()` function from `ROCR` package to compare the positive class in `pred_naive` (`pred_naive[,2]`) with the actual data (`data_test$default`) and store it as `pred_roc` object.
 
 Next, please use the performance function from ROCR package to help us define the axes and assign it to a `perf` object. To use the performance function, please define the arguments as below:
 - prediction.obj = pred_roc
 - measure = "tpr"
 - x.measure = "fpr"
 
-```
-perf <- 
-```
+After you created `perf` object, plot the performance by passing it in `plot()` function. Try to evaluate the ROC Curve, see if there are any undesirable results from our model. Next, take a look at the auc using `performance()` function, and set the arguments `prediction.obj = pred_roc`, and `measure = "auc"` then save it under `auc` object.
 
-After that, plot the performance using `plot()` function
+8. From our naive bayes model above, how do you interpret the AUC value?
+  - [ ] 78.44%, means the model performance is good because the closer to 1 the better
+  - [ ] 78.44%, means the model performance is poor because the closer to 0 the better
+  - [ ] 78.44%, the value of Area under ROC Curve did not give any information about model performance 
 
-```
-# your code here
-```
+## 5.3 Model Evaluation Performance
 
-The next step is to get the AUC (Area Under Curve) value. Take a look the auc using `performance()` function, and set the arguments `prediction.obj = pred_roc`, and `measure = "auc"` and saved it  `auc`. object
-
-```
-auc <-
-```
-
-8. From the model above, how is the value of Area Under the ROC Curve?
-  - [] 78.44%, means the model performance is quite good because the closer to 1 the better
-  - [] 78.44%, means the model performance is quite bad because the closer to 1 the worse
-  - [] 78.44%, the value of Area Uunder ROC Curve did not give any information about model performance 
-
-## 5.4 Model Evaluation Performance
-
-Then, check the model evaluation performance for the naive bayes model using `confusionMatrix()`
+Lastly, you can check the model performance for the naive bayes model using `confusionMatrix()` and compare it using the true label.
 
 ```
 # your code here
 ```
 
-# 6 Comparing The Model
+# 6 Models Comparison
 
-9. As a data scientist in a bank, our bosses wants to know the interpretation behind the model. What is the best model should we choose to present?
-  - [] Naive Bayes because we can intrepret the probability
-  - [] Decision Tree because we can know what is the most important variable by seeing what is the root
-  - [] Random Forest because we can know the most important variable to our target variable
+9. As a data scientist in financial institution, we are required to generate a rule-based model that can be implemented to the existing system. What is the best model for us to pick?
+  - [ ] Naive Bayes because all the conditional probabilities is well calculated
+  - [ ] Decision Tree because a decision tree model is easily translatable to a set of rules
+  - [ ] Random Forest because it is possible to traceback the rule using variable importance information
   
-10. From the three models we have built, if we, as a data scientist want to take as much as the number of people who are likely to default, what is the best model to choose?
-  - [] Naive Bayes
-  - [] Decision Tree
-  - [] Random Forest
+10. Between all of the models, which model has better performance in term of identifying all high risk customers?
+  - [ ] Naive Bayes
+  - [ ] Decision Tree
+  - [ ] Random Forest
