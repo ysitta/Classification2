@@ -114,8 +114,8 @@ The last part of building the model would be the model evaluation. To check the 
 ___
 3. From the decision tree performance above, we can conclude that our decision tree model is ...
   - [ ] Overall balanced
-  - [ ] Overfitting
-  - [ ] Underfitting
+  - [ ] Tends to overfitting
+  - [ ] Tends to underfitting
 ___
 
 # Random Forest
@@ -160,7 +160,7 @@ ___
   
 # Predicting the test data
   
-After building the model, we can now predict the data_train and data_test based on `model_rf`, from there, please choose the `type = "raw"`.
+After building the model, we can now predict the data_train and data_test based on `model_rf`, from there, please choose the `type = "raw"` to obtain class prediction.
 
 ```
 # your code here
@@ -250,9 +250,9 @@ Try to evaluate the ROC Curve; see if there are any undesirable results from our
 ```
 ___
 8. From our naive bayes model above, how do you interpret the AUC value?
-  - [ ] 78.44%, means the model performance is good because of the closer to 1 the better
-  - [ ] 78.44%, means the model performance is weak because of the closer to 0 the better
-  - [ ] 78.44%, the value of Area under ROC Curve did not give any information about model performance
+  - [ ] 72.22%, means the model performance is good because of the closer to 1 the better
+  - [ ] 72.22%, means the model performance is weak because of the closer to 0 the better
+  - [ ] 72.22%, the value of Area under ROC Curve did not give any information about model performance
 ___
 
 # Model Evaluation Performance
