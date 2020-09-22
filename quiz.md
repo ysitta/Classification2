@@ -8,7 +8,7 @@ In this quiz, you will use the loan dataset — the data stored as a csv format 
 
 Before we jump into modelling, we will start with data exploration first. Hence, load and investigate the data given `loan.csv` and assign it to the loan object, followed by investigating the data using `str()` or `glimpse()` function.
 
-```
+```{r}
 # your code here
 
 ```
@@ -16,16 +16,21 @@ Before we jump into modelling, we will start with data exploration first. Hence,
 Based on our investigation above, the loan data consists of 1000 observations and 17 variables, *which shows historical data of customers who are likely to default or not in a bank*. Meanwhile, the description of each feature explained below:
 
 - `checking_balance and savings_balance`: Status of existing checking/savings account
-- `credit_history`: Between critical, good, perfect, poor and very good
+- `months_loan_duration`: Duration of the loan period in months
+- `credit_history`: Between critical, good, perfect, poor, and very good
 - `purpose`: Between business, car(new), car(used), education, furniture, and renovations
-- `employment_duration`: Present employment since
+- `amount`: Loan amount in DM (Deutsche Mark)
+- `employment_duration`: Length of time at current job
 - `percent_of_income`: Installment rate in percentage of disposable income
-- `years_at_residence`: Present residence since
+- `years_at_residence`: Number of years at current residence
+- `age`: Customer's age
 - `other_credit`: Other installment plans (bank/store)
 - `housing`: Between rent, own, or for free
+- `existing_loans_count`: Number of ongoing loans
 - `job`: Between management, skilled, unskilled and unemployed
 - `dependents`: Number of people being liable to provide maintenance for
-- `phone`: Between none and yes (registered under customer name)
+- `phone`: Either no or yes (registered under customer name)
+- `default`: Either no or yes. A loan's default is considered as yes when it is defaulted, charged off, or past due date
 
 As a data scientist, you will develop a model that aids management with their decision-making process. The first thing we need to know is what kind of business question we would like to solve. Loans are risky but at the same time it is also a product that generates profits for the institution through differential borrowing/ lending rates. So identifying risky customers is one way to minimize lender losses. From there, we will try to predict using the given set of predictors and how we model the default variable.
 
@@ -33,7 +38,7 @@ Before go through the modeling section, take your time to do the exploration ste
 
 *Hint: Because we only focused at the debtor/borrower who defaulted, filter the historical data with the condition needed first (default == "yes")*
 
-```
+```{r}
 # your code here
 
 ```
@@ -46,14 +51,13 @@ ___
   - [ ] education
 ___
 
-
 # Cross-Validation
 
 Before we build our model, we should split the dataset into training and test data. In this step, please split the data into 80% training and 20% test proportion using `sample()` function, `set.seed(100)`, and store it as `data_train` and `data_test`.
 
 > Notes: Make sure you use RNGkind() before splitting
 
-```
+```{r}
 RNGkind(sample.kind = "Rounding")
 set.seed(100)
 # your code here
@@ -62,7 +66,7 @@ set.seed(100)
 
 Let's take a look distribution of proportion in train and test data using `prop.table(table(object$target))` function to make sure in train and test data has balance or not distribution of each class target.
 
-```
+```{r}
 # your code here
 
 ```
@@ -71,7 +75,7 @@ Based on the proportion of the target variable above, we can conclude that our t
 
 > Notes: set the argument `yname = "default"`
 
-```
+```{r}
 # your code here
 
 ```
@@ -80,7 +84,7 @@ Based on the proportion of the target variable above, we can conclude that our t
 
 After splitting our data into data_train and data_test, let us build our first model of a decision tree using `ctree()` function and store it under the `model_dt` object. To tune our model, let us set the `mincriterion = 0.10` argument.
 
-```
+```{r}
 # your code here
 
 ```
@@ -94,7 +98,7 @@ ___
 
 To have a better grasp of our model, please try and plot the model using `type = "simple"` argument.
 
-```
+```{r}
 # your code here
 
 ```
@@ -103,7 +107,8 @@ To have a better grasp of our model, please try and plot the model using `type =
 
 The goal of a good machine learning model is to generalize well from the training data to any data from the problem domain. This allows us to make predictions in the future on data the model has never seen. There is a terminology used in machine learning when we talk about how well a machine learning model learns and generalizes to new data, namely overfitting and underfitting. So to validate whether our model is fit enough, please predict towards `data_train` and `data_test` based on `model_dt` using `predict()` function and choose the `type = "response"`.
 
-```
+```{r}
+# your code here
 # pred_train_dt <-
 # pred_test_dt <-
 ```
@@ -111,6 +116,12 @@ The goal of a good machine learning model is to generalize well from the trainin
 # Model Evaluation
 
 The last part of building the model would be the model evaluation. To check the performance, we can use the `confusionMatrix()` to get our model performance. Please create two confusion matrix using our in-sample data (`data_train`) and out-of-sample data (`data_test`) and compare both performances.
+
+```{r}
+# your code here
+
+```
+
 ___
 3. From the decision tree performance above, we can conclude that our decision tree model is ...
   - [ ] Overall balanced
@@ -128,7 +139,7 @@ The second model that we want to build is Random Forest. Now, let us try to expl
 
 In your environment, please load the random forest model (`model_rf.RDS`) and save it under the `model_rf` object using the `readRDS()` function.
 
-```
+```{r}
 # your code here
 
 ```
@@ -143,7 +154,7 @@ ___
 
 Now check the summary of the final model we built using `model_rf$finalModel`.
 
-```
+```{r}
 # your code here
 
 ```
@@ -160,18 +171,19 @@ ___
   
 # Predicting the test data
   
-After building the model, we can now predict the data_train and data_test based on `model_rf`, from there, please choose the `type = "raw"` to obtain class prediction.
+After building the model, we can now predict the data_train and data_test based on `model_rf`, from there, please choose the `type = "raw"` to obtain class prediction. 
 
-```
+```{r}
 # your code here
-
+# pred_train_rf <-
+# pred_test_rf <-
 ```
 
 # Model evaluation
 
 Next, let us evaluate the random forest model we built with `confusionMatrix()` function and try to evaluate the performance of the random forest model. How should you evaluate the model performance?
 
-```
+```{r}
 # your code here
 
 ```
@@ -179,6 +191,11 @@ Next, let us evaluate the random forest model we built with `confusionMatrix()` 
 We could also use *Variable Importance*, to get a list of the most important variables used in our random forest. Many would argue that random forest, being a black box model, can offer no true information beyond its job in accuracy; actually paying special attention to attributes like variable importance for example often do help us gain valuable information about our data.
 
 Please take your time try to check which variable has a high significance to the prediction. We can check it using `varImp()` function and pass into the `plot()` to get the visualization.
+
+```{r}
+# your code here
+
+```
 
 ___
 6. From the plot you have created, which is the most variable influence the default?
@@ -207,23 +224,23 @@ ___
 
 Now let us build a naive bayes model using `naiveBayes()` function from the `e1071` package, then set the laplace parameter as 1. Store the model under `model_naive` before moving on to the next section.
 
-```
+```{r}
 # your code here
 
 ```
 
 # Predict the naive bayes model, using data train and data test
 
-Using our test dataset we have created earlier, try to predict using `model_naive` and use `type = "raw"`. The prediction will then results in a probability of positive class happening for each test dataset. 
+Using our test dataset we have created earlier, try to predict using `model_naive` and use `type = "raw"`. The prediction will then results in a probability of positive class happening for each test dataset. Store the result as `pred_naive`.
 
-```
+```{r}
 # your code here
 
 ```
 
 Now, let's take a look at ROC and AUC performance, use the `prediction()` function from the `ROCR` package to compare the positive class in `pred_naive` (`pred_naive[,2]`) with the actual data (`data_test$default`) and store it as `pred_roc` object.
 
-```
+```{r}
 # your code here
 
 ```
@@ -233,34 +250,39 @@ Next, please use the performance function from the ROCR package to help us defin
   - `measure = "tpr"`
   - `x.measure = "fpr"`
 
-```
-perf <-
+```{r}
+# your code here
+# perf <-
 ```
 
 After you created a `perf` object, plot the performance by passing it in `plot()` function.
 
-```
+```{r}
 # your code here
+
 ```
 
 Try to evaluate the ROC Curve; see if there are any undesirable results from our model. Next, take a look at the AUC using `performance()` function, and set the arguments `prediction.obj = pred_roc`, and `measure = "auc"` then save it under auc object.
 
-```
+```{r}
 # your code here
+
 ```
+
 ___
 8. From our naive bayes model above, how do you interpret the AUC value?
-  - [ ] 72.22%, means the model performance is good because of the closer to 1 the better
-  - [ ] 72.22%, means the model performance is weak because of the closer to 0 the better
-  - [ ] 72.22%, the value of Area under ROC Curve did not give any information about model performance
+  - [ ] 72.48%, means the model performance is good because of the closer to 1 the better
+  - [ ] 72.48%, means the model performance is weak because of the closer to 0 the better
+  - [ ] 72.48%, the value of Area under ROC Curve did not give any information about model performance
 ___
 
 # Model Evaluation Performance
 
-Lastly, you can check the model performance for the naive bayes model using `confusionMatrix()` and compare it using the actual label.
+Lastly, you can check the model performance for the naive bayes model using `confusionMatrix()` and compare it using the actual label in `data_test`. Use `type = "class"` to return the predicted class.
 
-```
+```{r}
 # your code here
+
 ```
 
 # Models Comparison
@@ -274,4 +296,3 @@ Lastly, you can check the model performance for the naive bayes model using `con
   - [ ] Naive Bayes
   - [ ] Decision Tree
   - [ ] Random Forest
-  
