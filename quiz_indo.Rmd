@@ -1,53 +1,44 @@
----
-title: "Kuis CIML II"
-author: "Team Algoritma"
-date: "6/6/2020"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Kuis Klasifikasi 2
 
 Kuis ini merupakan bagian dari proses penilaian *Algoritma Academy*. Selamat anda sudah menyelesaikan materi *Classification in Machine Learning II*! Kami akan melakukan penilaian berupa kuis untuk menguji materi yang sudah dipelajari. Pengerjaan Kuis diharapkan dapat dilakukan di dalam kelas, silakan hubungi tim instruktur kami jika Anda melewatkan kesempatan untuk mengambilnya di kelas.
 
-Pad kuis ini, kamu akan menggunakan dataset loan - data disimpan dalam format csv di repositori ini sebagai `loan.csv`. Untuk menyelesaikan tugas ini, kamu perlu membuat model klasifikasi menggunakan algoritma naive bayes, decision tree, dan random forest dengan mengikuti langkah-langkah berikut ini:
+Dalam kuis ini, Anda akan menganalisis dataset *loan* (pinjaman bank) yang menyimpan *data historis nasabah bank yang cenderung default (gagal bayar pinjaman) atau tidak*. Data tersimpan dalam repositori ini sebagai `loan.csv`. Untuk menyelesaikan tugas ini, Anda perlu membuat model klasifikasi menggunakan algoritma Naive Bayes, Decision Tree, dan Random Forest dengan mengikuti langkah-langkah berikut: 
 
-# Data Eksplorasi
+# Eksplorasi Data
 
-Sebelum kita mulai pemodelan, kita akan mulai dengan data eksplorasi terlebih dahulu. Sehingga, baca dan investigasi data `loan.csv` dan *assign* ke obyek `loan`, kemudian investigasilah data tersebut menggunakan fungsi `str()` atau `glimpse()`.
+Sebelum kita membuat model, kita akan coba memahami data terlebih dahulu. Muat data yang diberikan ke R (`loan.csv`) dan simpan ke dalam objek bernama` loan`, kemudian cek data secara singkat menggunakan fungsi `str()` atau `glimpse()`.
+
+*Note: Anda dapat menggunakan parameter `stringsAsFactors = TRUE` dari `read.csv()` sehingga semua kolom karakter akan otomatis disimpan sebagai faktor.* 
 
 ```{r}
 # your code here
 
 ```
 
-Berdasarkan investigasi di atas, data loan berisi 1000 observasi dan 17 variabel, yang menunjukkan data historis dari nasabah yang cenderung gagal bayar atau tidak di sebuah bank. Sedangkan, deskripsi dari tiap fitur dijelaskan di bawah ini:
+Berdasarkan investigasi di atas, data loan memiliki 1000 observasi dan 17 variabel. Berikut adalah deskripsi detail dari setiap kolom:
 
-- `checking_balance and savings_balance`: Status akun checking/savings yang ada
+- `checking_balance` dan `savings_balance`: Status akun checking/savings yang ada
 - `months_loan_duration`: Durasi periode pinjaman (dalam bulan)
-- `credit_history`: Antara *critical* (kritis), *good* (baik), *perfect* (sempurna), *poor* (buruk), dan *very good* (sangat baik)
-- `purpose`: Antara *business* (bisnis), *car(new)* mobil baru, *car(used)* (mobil bekas), *education* (pendidikan), furniture, dan *renovations* (renovasi)
+- `credit_history`: Status kredit yang terdiri dari *critical* (kritis), *good* (baik), *perfect* (sempurna), *poor* (buruk), dan *very good* (sangat baik)
+- `purpose`: Tujuan mengajukan pinjaman yang terdiri dari *business* (bisnis), *car(new)* (mobil baru), *car(used)* (mobil bekas), *education* (pendidikan), *furniture* (perabot rumah), dan *renovations* (renovasi)
 - `amount`: Jumlah pinjaman dalam DM (Deutsche Mark)
-- `employment_duration`: Lamanya waktu di pekerjaan saat ini
-- `percent_of_income`: Rate cicilan dari pendapatan (dalam persentase)
-- `years_at_residence`: Jumlah tahun di di tempat tinggal saat ini
+- `employment_duration`: Durasi bekerja pada pekerjaan saat ini
+- `percent_of_income`: Tingkat angsuran dalam persentase pendapatan bebas pajak
+- `years_at_residence`: Durasi tinggal di alamat domisili saat ini (dalam tahun)
 - `age`: Umur nasabah
-- `other_credit`: Other installment plans (bank/store) Rencana cicilan lainnya (bank/store)
-- `housing`: Antara *rent* (sewa), *own* (milik sendiri), atau *for free* (gratis)
+- `other_credit`: Rencana cicilan lainnya (bank/store)
+- `housing`: Kepemilikan rumah yang terdiri dari *rent* (sewa), *own* (milik sendiri), atau *for free* (gratis)
 - `existing_loans_count`: Jumlah pinjaman yang sedang berjalan
-- `job`: Antara *management* (manajemen), *skilled* (ahli), *unskilled* (tidak ahli) dan *unemployed* (pengangguran)
+- `job`: Pekerjaan yang terdiri dari *management* (manajemen), *skilled* (ahli), *unskilled* (tidak ahli) dan *unemployed* (pengangguran)
 - `dependents`: Jumlah orang yang bertanggung jawab untuk melakukan pemeliharaan
-- `phone`: Bisa tidak atau ya (terdaftar atas nama nasabah)
-- `default`: Tidak atau ya. Wanprestasi pinjaman dianggap ya ketika gagal bayar atau lewat tanggal jatuh tempo
+- `phone`: Apakah terdaftar atas nama nasabah (antara *yes*/*no*)
+- `default`: Apakah nasabah gagal bayar/*charged off*/lewat tanggal jatuh tempo (antara *yes*/*no*).
 
-Sebagai *data scientist*, Anda akan mengembangkan model yang dapat membantu manajemen dengan proses pengambilan keputusan mereka. Hal pertama yang perlu kita ketahui adalah pertanyaan bisnis seperti apa yang ingin kita pecahkan. Pinjaman berisiko tetapi pada saat yang sama juga merupakan produk yang menghasilkan keuntungan bagi lembaga melalui suku bunga pinjaman / pinjaman yang berbeda. Jadi mengidentifikasi nasabah yang berisiko adalah salah satu cara untuk meminimalkan kerugian pemberi pinjaman. Dari sana, kita akan mencoba memprediksi menggunakan kumpulan prediktor yang diberikan dan bagaimana kita memodelkan variabel default.
+Sebagai *data scientist*, Anda akan mengembangkan model yang dapat membantu manajemen dalam proses pengambilan keputusan. Hal pertama yang perlu kita ketahui adalah pertanyaan bisnis yang ingin kita pecahkan. Pinjaman adalah hal yang berisiko, namun pada saat yang sama juga menghasilkan keuntungan bagi lembaga melalui suku bunga pinjaman. **Mengidentifikasi nasabah yang berisiko tinggi untuk gagal bayar** adalah salah satu cara untuk meminimalisir kerugian pemberi pinjaman. Untuk itu, kita akan coba memprediksi kemungkinan nasabah gagal bayar menggunakan prediktor-prediktor yang disediakan.
 
-Sebelum melakukan modeling, luangkan waktu Anda untuk melakukan langkah eksplorasi. Misalkan kita diminta untuk menyelidiki jumlah historis nasabah yang gagal bayar untuk setiap tujuan pinjaman. Silakan lakukan agregasi data untuk mendapatkan jawabannya.
+Sebelum melakukan modeling, luangkan waktu Anda untuk melakukan langkah eksplorasi. Coba selidiki jumlah historis nasabah yang gagal bayar dari setiap tujuan pinjaman. Silakan lakukan agregasi data untuk mendapatkan jawabannya.
 
-*Petunjuk: Karena kita hanya fokus pada debitur / debitur yang default/gagal bayar, filter data historis dengan kondisi yang dibutuhkan terlebih dahulu (default == "yes")*
+*Petunjuk: Karena kita hanya fokus pada nasabah yang default/gagal bayar, filter data historis dengan kondisi yang dibutuhkan (default == "yes")*
 
 ```{r}
 # your code here
@@ -56,17 +47,17 @@ Sebelum melakukan modeling, luangkan waktu Anda untuk melakukan langkah eksplora
 
 ___
 1. Berdasarkan eksplorasi di atas, pinjaman dari tujuan (*purpose*) apa yang paling sering gagal bayar?
-  - [ ] furniture/appliances
-  - [ ] car
-  - [ ] business
-  - [ ] education
+  - [ ] Furniture/appliances
+  - [ ] Car
+  - [ ] Business
+  - [ ] Education
 ___
 
 # Cross-Validation
 
-Sebelum kita membuat model, kita harus membagi dataset menjadi train dan test data. Pada tahao ini, silahkan bagi data dengan proporsi 80% train dan 20% test menggunakan fungsi `sample()`, `set.seed(100)`, dan simpan ke dalam obyek `data_train` dan `data_test`. 
+Sebelum kita membuat model, kita harus membagi dataset menjadi data train dan test. Silahkan bagi data dengan proporsi 80% train dan 20% test menggunakan fungsi `sample()`, `set.seed(100)`, dan simpan ke dalam obyek `data_train` dan `data_test`. 
 
-> Keterangan: Pastikan Anda menggunakan fungsi RNGkind() sebelum membagi data
+> Note: Pastikan Anda menggunakan fungsi `RNGkind()` dan `set.seed()` sebelum membagi data dan menjalankannya bersamaan dengan code `sample()` Anda.
 
 ```{r}
 RNGkind(sample.kind = "Rounding")
@@ -75,138 +66,192 @@ set.seed(100)
 
 ```
 
-Mari kita lihat proporsi target variabel pada data train dan test menggunakan fungsi `prop.table (table(object$target))` untuk memastikan dalam data train and test memiliki distribusi yang seimbang atau tidak untuk kelas targetnya.
+Mari kita lihat proporsi kelas target pada data train menggunakan fungsi `prop.table (table(object$target))` untuk memastikan data train memiliki proporsi kelas target yang seimbang.
 
 ```{r}
 # your code here
 
 ```
 
-Berdasarkan proporsi di atas, dapat disimpulkan bahwa variabel target kita dapat dikatakan tidak seimbang; karenanya kita harus menyeimbangkannya sebelum menggunakannya untuk model kita. Satu hal terpenting yang harus diingat adalah bahwa semua operasi sub-sampling harus diterapkan hanya pada data train. Jadi lakukanlah pada `data_train` menggunakan fungsi` downSample () `dari paket tanda sisipan.
+Berdasarkan proporsi di atas, dapat disimpulkan bahwa proporsi kelas target tidak seimbang; kita harus menyeimbangkannya sebelum menggunakannya pada model kita. Satu hal penting yang harus diingat adalah semua metode sub-sampling hanya boleh diterapkan pada data train. Lakukanlah metode *downsampling* pada `data_train` menggunakan fungsi `downSample()` dari package caret, lalu simpan data hasil downsample dalam objek `data_train_down`. Anda juga perlu memastikan bahwa variabel target sudah dalam tipe faktor sebelum melakukan downsample. 
 
-> Notes: set the argument `yname = "default"`
+> Note: atur parameter `yname = "default"`
+
+```{r}
+library(caret)
+# your code here
+data_train_down <-
+
+```
+
+# Naive Bayes
+
+Setelah membagi data menjadi data train dan test serta melakukan downsample pada data train, mari kita buat model pertama dengan algoritma Naive Bayes. Ada beberapa keuntungan dalam menggunakan model ini, misalnya:
+
+- Modelnya relatif cepat untuk dilatih
+- Dapat menghasilkan probabilitas bersyarat antara target dan prediktornya
+- Dapat menangani fitur/variabel yang tidak relevan 
+
+___
+2. Berikut adalah karakteristik dari model Naive Bayes, **KECUALI**
+  - [ ] Mengasumsikan hubungan antar prediktor yang saling independen
+  - [ ] Mengasumsikan hubungan antara prediktor dan target variabel saling independen
+  - [ ] Skewness due to data scarcity
+
+*Referensi Opsi Bahasa Inggris:*
+  - [ ] Assume that among the predictor variables are independent
+  - [ ] Assume that between target and predictor variables are independent
+  - [ ] Skewness due to data scarcity
+___
+
+Buat model Naive Bayes menggunakan fungsi `naiveBayes()` dari package `e1071`, lalu atur parameter `laplace = 1`. Simpan model ke dalam objek `model_naive` sebelum melanjutkan ke tahap berikutnya.
+
+```{r}
+library(e1071)
+# your code here
+model_naive <- 
+```
+
+# Prediksi Model Naive Bayes
+
+Lakukan prediksi ke data test menggunakan `model_naive`. Gunakan fungsi `predict()` dengan parameter `type = "class"` untuk mendapatkan prediksi kelas. Simpan hasil prediksi ke dalam objek `pred_naive`. 
 
 ```{r}
 # your code here
-
+pred_naive <- 
 ```
+
+# Evaluasi Model Naive Bayes
+
+Bagian terakhir dari pembuatan model adalah evaluasi model. Anda dapat memeriksa performa model Naive Bayes menggunakan `confusionMatrix()` dan membandingkan kelas hasil prediksi (`pred_naive`) dengan label sebenarnya dari `data_test`. Pastikan Anda mengatur status pelanggan yang *default* sebagai kelas positif (`positive = "yes"`). 
+
+```{r}
+# your code here
+```
+
+Di atas adalah metrik evaluasi yang diperoleh dari model Naive Bayes. Mari coba gunakan algoritma lain untuk melihat apakah kita dapat menghasilkan prediksi yang lebih baik. 
 
 # Decision Tree
 
-Setelah membagi data kita menjadi data_train dan data_test, mari kita buat model pertama dari pohon keputusan menggunakan fungsi `ctree()` dan simpan di bawah objek `model_dt`. Untuk menyetel model kita, mari kita setel argumen `mincriterion = 0.10`.
+Mari buat model Decision Tree menggunakan fungsi `ctree()` dan simpan ke dalam objek `model_dt`. Untuk melakukan *tuning* model, mari kita atur parameter `mincriterion = 0.10`.
 
 ```{r}
+library(partykit)
 # your code here
-
+model_dt <-
 ```
 ___
 
-2. Pada model decision tree, tujuan dari mengatur `mincriterion = 0.10` adalah ...
-  - [ ] To prune our model, we let the tree that has maximum p-value <= 0.10 to split the node
-  - [ ] To prune our model, we let the tree that has maximum p-value <= 0.90 to split the node
+3. Pada model decision tree, tujuan dari mengatur `mincriterion = 0.10` adalah ...
+  - [ ] Untuk pemangkasan (*pruning*) pohon, hanya node dengan p-value <= 0.10 yang dapat melakukan *splitting node*
+  - [ ] Untuk pemangkasan (*pruning*) pohon, hanya node dengan p-value <= 0.90 yang dapat melakukan *splitting node*
+  - [ ] Untuk pemangkasan (*pruning*) pohon, hanya memperbolehkan pohon yang memiliki maksimum 10% data pada *terminal node*.
+
+*Referensi Opsi Bahasa Inggris:*
+  - [ ] To prune our model, we let the tree that has p-value <= 0.10 to split the node
+  - [ ] To prune our model, we let the tree that has p-value <= 0.90 to split the node
   - [ ] To prune our model, we let the tree that has a maximum of 10% of the data in the terminal nodes
-  - [ ] To prune our model, we let the tree that has a maximum of 10% of the data in the terminal nodes
+
 ___
 
-Untuk mendapatkan pemahaman yang lebih baik tentang model kita, buatlah plot dari model dan gunakan argumen `type = "simple"`.
+Untuk mendapatkan pemahaman yang lebih baik tentang model, buatlah plot dari model dan gunakan parameter `type = "simple"`.
 
 ```{r}
 # your code here
 
 ```
 
-# Prediksi ke data train dan test
+# Prediksi Model Decision Tree
 
-Tujuan dari model *machine learning* yang baik adalah untuk menggeneralisasi dengan baik dari data train ke data mana pun dari domain masalah. Ini memungkinkan kita membuat prediksi di masa mendatang pada data yang belum pernah dilihat oleh model. Ada sebuah terminologi yang digunakan dalam *machine learning* ketika kita berbicara tentang seberapa baik model *machine learning* belajar dan menggeneralisasi ke data baru, yaitu *overfitting* dan *underfitting.* Jadi untuk memvalidasi apakah model kita cukup sesuai, harap prediksi model kita ke `data_train` dan` data_test` berdasarkan `model_dt` menggunakan fungsi` predict() `dan pilih` type = "response" `
+Tujuan dari pembuatan model *machine learning* adalah untuk menggeneralisasi pola yang ada pada *data train* agar dapat menerapkannya pada data mana pun yang berasal dari domain (topik masalah) yang sama. Ini memungkinkan kita untuk membuat prediksi pada data baru yang belum pernah dilihat oleh model. Ada terminologi yang digunakan dalam *machine learning* ketika berbicara tentang seberapa baik model belajar dan kemampuannya dalam menggeneralisasi ke data baru, yaitu *overfitting* dan *underfitting*. 
+
+___
+4.  Berdasarkan pengetahuan Anda terkait karakteristik model machine learning yang baik, pernyataan manakah di bawah ini yang **SALAH**? 
+  - [ ] Overfitting adalah kondisi dimana model baik dalam memprediksi data train, namun amat buruk dalam memprediksi data test.
+  - [ ] Underfitting adalah kondisi dimana model buruk dalam memprediksi data train, namun baik dalam memprediksi data test.
+  - [ ] Model Machine Learning yang baik mungkin memiliki performa yang sedikit lebih rendah pada data test dibandingkan pada data train. 
+  
+*Referensi Opsi Bahasa Inggris:*
+  - [ ] Overfitting is a condition where a model performs well on the training data but performs very poorly in test data.
+  - [ ] Underfitting is a condition where a model performs poor in the training data but performs well on the test data.
+  - [ ] Machine Learning model that fit just right may have a slightly lower performance in its test data than in its training data.
+___
+
+Dikatakan bahwa model Decision Tree cenderung mengalami overfitting. Untuk memvalidasi apakah model kita cukup baik, coba lakukan prediksi ke data train dan test berdasarkan `model_dt` menggunakan fungsi `predict()` dengan mengatur parameter `type = "response"`.
 
 ```{r}
 # your code here
-# pred_train_dt <-
-# pred_test_dt <-
+pred_train_dt <-
+pred_test_dt <-
 ```
 
-# Evaluasi Model
+# Evaluasi Model Decision Tree
 
-The last part of building the model would be the model evaluation. To check the performance, we can use the `confusionMatrix()` to get our model performance. Please create two confusion matrix using our in-sample data (`data_train`) and out-of-sample data (`data_test`) and compare both performances.
-
-Bagian terakhir dari pembuatan model adalah evaluasi model. Untuk memeriksa performa model, kita dapat menggunakan `confusionMatrix ()` untuk mendapatkan performa model kita.Buatlah dua *confusion matrix* menggunakan data dalam sampel (`data_train`) dan data di luar sampel (` uji_data`) dan bandingkan kedua performanya.
+Untuk memeriksa performa model, kita dapat menggunakan `confusionMatrix()`. Buatlah dua *confusion matrix* menggunakan *in-sample data* (data train) dan *out-of-sample data* (data test) kemudian bandingkan kedua performanya. Pastikan Anda mengatur status pelanggan yang *default* sebagai kelas positif (`positive = "yes"`).  
 
 ```{r}
 # your code here
 
 ```
 
-___
-3. Dari performa decision tree di atas, kita dapat simpulkan bahwa model decision tree kita adalah...
-  - [ ] Overall balanced
-  - [ ] Tends to overfitting
-  - [ ] Tends to underfitting
-___
+Dari hasil di atas, dapat disimpulkan bahwa model Decision Tree memiliki performa yang lebih rendah saat memprediksi ke data test. Sebagian besar metrik evaluasinya juga memiliki skor yang hampir sama dengan Model Naive Bayes. 
 
 # Random Forest
 
-The second model that we want to build is Random Forest. Now, let us try to explore the random forest model we have prepared in `model_rf.RDS`. The `model_rf.RDS` is built with the following hyperparameter:
+Model terakhir yang ingin kita buat adalah Randon Forest. Sekarang, coba eksplorasi model random forest yang telah kami siapkan yaitu `model_rf.RDS`. Model tersebut dibuat menggunakan *hyperparameter* di bawah ini:
 
-Model kedua yang ingin kita buat adalah Randon Forest. Sekarang, cobalah eksplor model random forest yang sudah kita persiapkan di `model_rf.RDS`. Model terserbut dibuat menggunakan *hyperparameter* di bawah ini:
-
-- `set.seed(100)` # no set seed
+- `set.seed(100)` # angka seed
 - `number = 5` # jumlah k-fold cross-validation
-- `repeats = 3` # jumlah of the iteration
+- `repeats = 3` # jumlah iterasi
 
-Di RStudio *environment* Anda, muatlah model Random forest (`model_rf.RDS`) dan simpan dalam objek` model_rf` menggunakan fungsi `readRDS ()`.
+Bacalah model Random Forest tersebut (`model_rf.RDS`)  menggunakan fungsi `readRDS()` dan simpan ke dalam objek `model_rf`.
 
 ```{r}
 # your code here
-
+model_rf <-
 ```
 
 ___
-4. Di bawah ini manakah yang BUKAN keuntungan dari penggunaan model random forest?
+5. Di bawah ini manakah yang **BUKAN** keunggulan dari model Random Forest?
+  - [ ] Automatic feature selection
+  - [ ] Pembuatan model cenderung cepat dibandingkan decision tree
+  - [ ] Mereduksi bias pada model karena melakukan aggregasi dari hasil beberapa decision tree
+  - [ ] Menghasilkan estimasi out-of-box error yang tidak bias
+
+*Referensi Opsi Bahasa Inggris:*
   - [ ] Automatic feature selection
   - [ ] It is a relatively fast model to compared to decision tree
   - [ ] Reduce bias in a model as it is the aggregate multiple decision trees
   - [ ] It generates an unbiased estimate of the out-of-box error
 ___
 
-Kemudian, periksalah rangkuman dari final model yang kita buat menggunakan `model_rf$finalModel`
+Kemudian, lihatlah rangkuman final model dari model Random Forest menggunakan `model_rf$finalModel`
 
 ```{r}
+library(randomForest)
 # your code here
 
 ```
 
-Dalam praktiknya, random forest memiliki estimasi out-of-bag (OOB) yang merepresentasikan estimasi akurasi pada data yang belum pernah dilihat.
+Dalam praktiknya, random forest telah memiliki estimasi out-of-bag (OOB) yang merepresentasikan akurasi pada *out-of-bag data*.
 
 ___
-5. Berdasarkan ringkasan `model_rf$finalModel` di atas, out-of-bag error rate dari model kita adalah 33.61%, hal ini berarti?
+6. Berdasarkan ringkasan `model_rf$finalModel` di atas, out-of-bag error dari model adalah 33.61%, hal ini berarti?
+  - [ ] Kita memiliki error 33.61% pada *unseen data*
+  - [ ] Kita memiliki error 33.61% pada data train
+  - [ ] Kita memiliki error 33.61% pada data loan
+  - [ ] Kita memiliki error 33.61% pada *in-sample data*
+
+*Referensi Opsi Bahasa Inggris:*
   - [ ] We have error 33.61% of our unseen data
   - [ ] We have error 33.61% of our train data
   - [ ] We have error 33.61% of our loan data
   - [ ] We have error 33.61% of our in-sample data
 ___
-  
-# Prediksi ke data test
-  
-Setelah membangun model, kini kita dapat memprediksi `data_train` dan `data_test` menggunakan `model_rf`, silahkan pilih `type = "raw"` untuk mendapatkan prediksi kelasnya
 
-```{r}
-# your code here
-# pred_train_rf <-
-# pred_test_rf <-
-```
+Kita juga bisa menggunakan informasi *Variable Importance*, untuk mendapatkan daftar variabel penting yang digunakan pada model Random Forest. Banyak yang berargumen bahwa Random Forest, sebgai model *Black Box*, tidak dapat menawarkan informasi penting lain selain akurasinya yang amat tinggi. Namun, memberikan perhatian khusus pada atribut seperti *Variable Importance* sering kali membantu kita dalam mendapatkan informasi berharga tentang data.
 
-# Evaluasi model
-
-Selanjutnya, mari kita evaluasi model random forest yang kita buat dengan fungsi `confusionMatrix()`.
-
-```{r}
-# your code here
-
-```
-
-Kita juga bisa menggunakan *Variable Importance*, untuk mendapatkan daftar variabel paling penting yang digunakan di model random forest kita. Banyak yang akan berargumen bahwa random forest, sebagai model *black box*, tidak dapat menawarkan informasi yang penting selain akurasi; sebenarnya memberikan perhatian khusus pada atribut seperti *variabel importance* sering kali membantu kita mendapatkan informasi berharga tentang data.
-
-Silahkan periksa variabel yang memiliki pengaruh signifikan terhadap prediksi. Kita dalam periksa hal tersebut dengan menggunakan fungsi `varImp()` dan gunanakan `plot()` untuk mendapatkan visualisasinya.
+Tentukan variabel yang memiliki pengaruh penting dalam menghasilkan prediksi (*Variable Importance*) menggunakan fungsi `varImp()`, kemudian masukkan ke dalam fungsi `plot()` untuk mendapatkan visualisasinya.
 
 ```{r}
 # your code here
@@ -214,101 +259,96 @@ Silahkan periksa variabel yang memiliki pengaruh signifikan terhadap prediksi. K
 ```
 
 ___
-6. Dari plot yang sudah dibuat, variabel apakah yang paling berpengaruh terhadap *default*?
+7. Dari plot yang terbentuk, variabel mana yang memiliki andil paling tinggi dalam menghasilkan prediksi?
   - [ ] checking_balance
   - [ ] months_loan_duration
   - [ ] amount
   - [ ] purpose
-___
+___ 
+
+# Prediksi Model Random Forest
   
-# Naive Bayes
+Setelah membangun model, kini kita dapat memprediksi data train dan data test menggunakan `model_rf`. Gunakan fungsi `predict()` dan atur parameter `type = "raw"` untuk mendapatkan prediksi kelas.
 
-Model terakhir yang akan kita bandingkan adalah Naive Bayes. Terdapat beberapa keuntungan saat menggunakan model ini, contohnya:
+```{r}
+# your code here
+pred_train_rf <-
+pred_test_rf <-
+```
 
-- Model cenderung cepat untuk dilatih
-- Model menghasilkan estimasi probability dari prediksi
-- Model dapat mengatasi fitur-fitur yang tidak relevan
+# Evaluasi Model Random Forest
 
-___
-7. Di bawah ini merupakan karakteristik dari Naive Bayes, **KECUALI**
-  - [ ] Assume that among the predictor variables are independent
-  - [ ] Assume that between target and predictor variables are independent
-  - [ ] Skewness due to data scarcity
-___
-
-# Naive Bayes model fitting
-
-Sekarang mari kita buat model *naive bayes*  menggunakan fungsi `naiveBayes()` dari package `e1071`, lalu set parameter laplace sebagai 1. Simpan model dengan nama obyek ` model_naive` sebelum melanjutkan ke bagian berikutnya.
+Selanjutnya, mari kita evaluasi model random forest dengan fungsi `confusionMatrix()`.
 
 ```{r}
 # your code here
 
 ```
 
-# Prediksi model naive bayes ke data train dan data test
-
-Dengan menggunakan data test yang telah kita buat sebelumnya, prediksilah menggunakan `model_naive` dan gunakan`type = "raw"`. Prediksi akan menghasilkan kemungkinan terjadinya kelas positif untuk setiap set data pengujian. Kemudian, simpan hasilnya sebagai `pred_naive`.
+Cara lain untuk mengevaluasi performa model adalah dengan melihat nilai ROC dan AUC-nya. Untuk menghitungnya, kita membutuhkan *probabilitas ke kelas positif untuk setiap observasi*. Mari fokus pada nilai ROC dan AUC dari prediksi model Random Forest untuk *data test*. Pertama, lakukan prediksi ke data test menggunakan `model_rf` dengan menggunakan parameter `type = "prob"`. Akan dihasilkan prediksi nilai probabilitas untuk setiap kelas. Anda dapat menyimpan hasil prediksi ke dalam objek `prob_test`. 
 
 ```{r}
 # your code here
-
+prob_test <- 
 ```
 
-Sekarang, mari kita lihat performa ROC dan AUC, gunakan fungsi `prediction()` dari package `ROCR` untuk membandingkan kelas positif di` pred_naive` (`pred_naive [, 2]`) dengan data aktual (`data_test$default`) dan simpan sebagai objek `pred_roc`.
+Sekarang, gunakan fungsi `prediction()` dari package `ROCR` untuk membandingkan probability ke kelas positif yang tersimpan dalam `prob_test[,"yes"]` dengan data aktual `data_test$default`, kemudian simpan ke dalam objek `pred_roc`.
 
 ```{r}
+library(ROCR)
 # your code here
-
+pred_roc <- 
 ```
 
-Selanjutnya, silahkan gunakan fungsi untuk cek performa dari package ROCR untuk membantu kita mendefinisikan sumbu dan menetapkannya ke objek `perf`. Untuk menggunakan fungsi tersebut, tentukan argumen seperti di bawah ini:
+Selanjutnya, gunakan fungsi `performance()` dari package ROCR dengan mendefinisikan axis plot untuk menghasilkan plot ROC. Simpan hasilnya ke dalam objek `perf`. Untuk menggunakan fungsi `performance()`, atur parameter di bawah ini:
   - `prediction.obj = pred_roc`
   - `measure = "tpr"`
   - `x.measure = "fpr"`
 
 ```{r}
 # your code here
-# perf <-
+perf <-
 ```
 
-Setelah Anda membuat objek `perf`, buatlah plot ROC dengan menggunakan fungsi`plot()` dan masukkan obyek `perf` di dalamnya.
+Setelah Anda membuat objek `perf`, buatlah plot ROC dengan memasukkan objek `perf` ke dalam fungsi`plot()`.
 
 ```{r}
 # your code here
 
 ```
 
-Evaluasilah Kurva ROC; lihat apakah ada hasil yang tidak diinginkan dari model kita. Selanjutnya, lihatlah nilai AUC menggunakan fungsi `performance()`, dan set argumen `prediction.obj = pred_roc`, dan` measure = "auc" `lalu simpan di objek `auc`.
+Evaluasilah Kurva ROC; lihat apakah ada hasil yang tidak diinginkan dari model. Selanjutnya, carilah nilai AUC menggunakan fungsi `performance()` dengan mengatur parameter `prediction.obj = pred_roc` dan `measure = "auc"` lalu simpan ke dalam objek `auc`.
 
 ```{r}
 # your code here
-
+auc <- 
 ```
 
 ___
-8. Dari model naive bayes di atas, bagaimana Anda menginterpretasi nilai AUC?
-  - [ ] 72.48%, means the model performance is good because of the closer to 1 the better
-  - [ ] 72.48%, means the model performance is weak because of the closer to 0 the better
-  - [ ] 72.48%, the value of Area under ROC Curve did not give any information about model performance
+8. Dari hasil di atas, bagaimana Anda menginterpretasi nilai AUC?
+  - [ ] 95.51% berarti performa model baik, nilai yang mendekati 1 semakin baik
+  - [ ] 95.51% berarti performa model buruk, nilai yang mendekati 0 semakin baik
+  - [ ] 95.51% sebagai nilai *Area under ROC Curve* tidak memberikan informasi apapun terkait performa model
+
+*Referensi Opsi Bahasa Inggris:*
+  - [ ] 95.51% means that the model performance is good because the closer to 1 the better
+  - [ ] 95.51% means that the model performance is weak because the closer to 0 the better
+  - [ ] 95.51% as Area under ROC Curve value did not give any information about the model performance
 ___
 
-# Performa Model Evaluasi
+# Komparasi Model
 
-Terakhir, Anda dapat periksa performa model untuk model naive bayes menggunakan `confusionMatrix()` dan membandingkannya menggunakan label sebenarnya di `data_test`. Gunakan `type =" class "` untuk mengembalikan prediksi kelasnya.
+9. Sebagai seorang *data scientist* di sebuah institusi finansial, kita diminta untuk menghasilkan *rule-based model* yang dapat dengan mudah diimplementasikan pada sistem yang sudah ada. Model apa yang paling baik untuk digunakan?
+  - [ ] Naive Bayes karena menghasilkan probabilitas bersyarat yang dihitung dengan baik
+  - [ ] Decision Tree karena model mudah ditranslasikan menjadi suatu set aturan prediksi
+  - [ ] Random Forest karena dapat dilakukan perunutan balik aturan prediksi berdasarkan informasi *variable importance*. 
 
-```{r}
-# your code here
-
-```
-
-# Models Comparison
-
-9. Sebagai seorang data scientist di sebuah institusi finansial, kita diminta untuk menghasilkan sebuah rule-based model yang dapat diimplementasikan ke sistem yang sudah ada. Model apa yang terbaik untuk dipilih?
+*Referensi Opsi Bahasa Inggris:*
   - [ ] Naive Bayes because all the conditional probabilities are well calculated
   - [ ] Decision Tree because a decision tree model is easily translatable to a set of rules
   - [ ] Random Forest because it is possible to traceback the rule using variable importance information
   
-10. Antara semua model yang ada, model manakah yang memiliki performa lebih baik untuk mengidentifikasi nasabah yang beresiko tinggi?
+10. Dari seluruh model yang telah dibuat, model mana yang memiliki performa paling baik dalam mengidentifikasi nasabah yang beresiko tinggi?
   - [ ] Naive Bayes
   - [ ] Decision Tree
   - [ ] Random Forest
