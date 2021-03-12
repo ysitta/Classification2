@@ -8,8 +8,6 @@ Dalam kuis ini, Anda akan menganalisis dataset *loan* (pinjaman bank) yang menyi
 
 Sebelum kita membuat model, kita akan coba memahami data terlebih dahulu. Muat data yang diberikan ke R (`loan.csv`) dan simpan ke dalam objek bernama` loan`, kemudian cek data secara singkat menggunakan fungsi `str()` atau `glimpse()`.
 
-*Note: Anda dapat menggunakan parameter `stringsAsFactors = TRUE` dari `read.csv()` sehingga semua kolom karakter akan otomatis disimpan sebagai faktor.* 
-
 ```{r}
 # your code here
 
@@ -33,6 +31,14 @@ Berdasarkan investigasi di atas, data loan memiliki 1000 observasi dan 17 variab
 - `dependents`: Jumlah orang yang bertanggung jawab untuk melakukan pemeliharaan
 - `phone`: Apakah terdaftar atas nama nasabah (antara *yes*/*no*)
 - `default`: Apakah nasabah gagal bayar/*charged off*/lewat tanggal jatuh tempo (antara *yes*/*no*).
+
+Kita juga perlu memastikan bahwa setiap kolom telah menyimpan tipe data yang tepat. Anda dapat melakukan data wrangling pada chunk di bawah ini bila dibutuhkan.
+
+*Tips: Anda dapat menggunakan parameter `stringsAsFactors = TRUE` dari `read.csv()` sehingga semua kolom karakter akan otomatis disimpan sebagai faktor.* 
+
+```{r}
+
+```
 
 Sebagai *data scientist*, Anda akan mengembangkan model yang dapat membantu manajemen dalam proses pengambilan keputusan. Hal pertama yang perlu kita ketahui adalah pertanyaan bisnis yang ingin kita pecahkan. Pinjaman adalah hal yang berisiko, namun pada saat yang sama juga menghasilkan keuntungan bagi lembaga melalui suku bunga pinjaman. **Mengidentifikasi nasabah yang berisiko tinggi untuk gagal bayar** adalah salah satu cara untuk meminimalisir kerugian pemberi pinjaman. Untuk itu, kita akan coba memprediksi kemungkinan nasabah gagal bayar menggunakan prediktor-prediktor yang disediakan.
 
@@ -73,12 +79,13 @@ Mari kita lihat proporsi kelas target pada data train menggunakan fungsi `prop.t
 
 ```
 
-Berdasarkan proporsi di atas, dapat disimpulkan bahwa proporsi kelas target tidak seimbang; kita harus menyeimbangkannya sebelum menggunakannya pada model kita. Satu hal penting yang harus diingat adalah semua metode sub-sampling hanya boleh diterapkan pada data train. Lakukanlah metode *downsampling* pada `data_train` menggunakan fungsi `downSample()` dari package caret, lalu simpan data hasil downsample dalam objek `data_train_down`. Anda juga perlu memastikan bahwa variabel target sudah dalam tipe faktor sebelum melakukan downsample. 
+Berdasarkan proporsi di atas, dapat disimpulkan bahwa proporsi kelas target tidak seimbang; kita harus menyeimbangkannya sebelum menggunakannya pada model kita. Satu hal penting yang harus diingat adalah semua metode sub-sampling hanya boleh diterapkan pada data train. Lakukanlah metode *downsampling* pada `data_train` menggunakan fungsi `downSample()` dari package caret, lalu simpan data hasil downsample dalam objek `data_train_down`. Anda juga perlu memastikan bahwa variabel target sudah dalam tipe faktor. 
 
 > Note: atur parameter `yname = "default"`
 
 ```{r}
 library(caret)
+set.seed(100)
 # your code here
 data_train_down <-
 
@@ -129,22 +136,21 @@ Bagian terakhir dari pembuatan model adalah evaluasi model. Anda dapat memeriksa
 # your code here
 ```
 
-Di atas adalah metrik evaluasi yang diperoleh dari model Naive Bayes. Mari coba gunakan algoritma lain untuk melihat apakah kita dapat menghasilkan prediksi yang lebih baik. 
-
 # Decision Tree
 
-Mari buat model Decision Tree menggunakan fungsi `ctree()` dan simpan ke dalam objek `model_dt`. Untuk melakukan *tuning* model, mari kita atur parameter `mincriterion = 0.10`.
+Mari buat model Decision Tree menggunakan fungsi `ctree()` dan simpan ke dalam objek `model_dt`. Untuk melakukan *tuning* model, mari kita atur parameter `mincriterion = 0.90`.
 
 ```{r}
 library(partykit)
+set.seed(100)
 # your code here
 model_dt <-
 ```
 ___
 
-3. Pada model decision tree, tujuan dari mengatur `mincriterion = 0.10` adalah ...
-  - [ ] Untuk pemangkasan (*pruning*) pohon, hanya node dengan p-value <= 0.10 yang dapat melakukan *splitting node*
+3. Pada model decision tree, tujuan dari mengatur `mincriterion = 0.90` adalah ...
   - [ ] Untuk pemangkasan (*pruning*) pohon, hanya node dengan p-value <= 0.90 yang dapat melakukan *splitting node*
+  - [ ] Untuk pemangkasan (*pruning*) pohon, hanya node dengan p-value <= 0.10 yang dapat melakukan *splitting node*
   - [ ] Untuk pemangkasan (*pruning*) pohon, hanya memperbolehkan pohon yang memiliki maksimum 10% data pada *terminal node*.
 
 *Referensi Opsi Bahasa Inggris:*
@@ -156,49 +162,49 @@ ___
 
 Untuk mendapatkan pemahaman yang lebih baik tentang model, buatlah plot dari model dan gunakan parameter `type = "simple"`.
 
-```{r}
+```{r fig.width=12}
 # your code here
 
 ```
 
-# Prediksi Model Decision Tree
-
-Tujuan dari pembuatan model *machine learning* adalah untuk menggeneralisasi pola yang ada pada *data train* agar dapat menerapkannya pada data mana pun yang berasal dari domain (topik masalah) yang sama. Ini memungkinkan kita untuk membuat prediksi pada data baru yang belum pernah dilihat oleh model. Ada terminologi yang digunakan dalam *machine learning* ketika berbicara tentang seberapa baik model belajar dan kemampuannya dalam menggeneralisasi ke data baru, yaitu *overfitting* dan *underfitting*. 
-
-___
-4.  Berdasarkan pengetahuan Anda terkait karakteristik model machine learning yang baik, pernyataan manakah di bawah ini yang **SALAH**? 
-  - [ ] Overfitting adalah kondisi dimana model baik dalam memprediksi data train, namun amat buruk dalam memprediksi data test.
-  - [ ] Underfitting adalah kondisi dimana model buruk dalam memprediksi data train, namun baik dalam memprediksi data test.
-  - [ ] Model Machine Learning yang baik mungkin memiliki performa yang sedikit lebih rendah pada data test dibandingkan pada data train. 
+4. Berdasarkan plot di atas, manakah pernyataan interpretasi di bawah ini yang **TEPAT**?
+  - [ ] nasabah dengan `checking_balance` > 200 DM, dan `credit_history` tecatat "perfect", serta `saving_balance` yang "unknown" (tidak diketahui) diekspektasikan akan default
+  - [ ] nasabah dengan `checking_balance` 1-200 DM, dan `months_loan_duration` < 21 diekspektasikan akan default
+  - [ ] nasabah dengan `checking_balance` tercatat "unknown" (tidak diketahui), dan `other_credit` berupa "store" diekspektasikan akan default
   
 *Referensi Opsi Bahasa Inggris:*
-  - [ ] Overfitting is a condition where a model performs well on the training data but performs very poorly in test data.
-  - [ ] Underfitting is a condition where a model performs poor in the training data but performs well on the test data.
-  - [ ] Machine Learning model that fit just right may have a slightly lower performance in its test data than in its training data.
-___
+  - [ ] a customer who has `checking_balance` > 200 DM, with `credit_history` labelled "perfect", and `saving_balance` that is "unknown" is expected to default
+  - [ ] a customer who has `checking_balance` 1-200 DM, with `months_loan_duration` < 21 is expected to default
+  - [X] a customer who has `checking_balance` that is "unknown", with `other_credit` consist of "store" is expected to default
 
-Dikatakan bahwa model Decision Tree cenderung mengalami overfitting. Untuk memvalidasi apakah model kita cukup baik, coba lakukan prediksi ke data train dan test berdasarkan `model_dt` menggunakan fungsi `predict()` dengan mengatur parameter `type = "response"`.
+
+# Prediksi Model Decision Tree
+
+Setelah kita membuat model, coba lakukan prediksi ke data test berdasarkan `model_dt` menggunakan fungsi `predict()` dengan mengatur parameter `type = "response"`.
 
 ```{r}
 # your code here
-pred_train_dt <-
-pred_test_dt <-
+pred_dt <-
 ```
 
 # Evaluasi Model Decision Tree
 
-Untuk memeriksa performa model, kita dapat menggunakan `confusionMatrix()`. Buatlah dua *confusion matrix* menggunakan *in-sample data* (data train) dan *out-of-sample data* (data test) kemudian bandingkan kedua performanya. Pastikan Anda mengatur status pelanggan yang *default* sebagai kelas positif (`positive = "yes"`).  
+Untuk memeriksa performa model, kita dapat menggunakan `confusionMatrix()`. Pastikan Anda mengatur status pelanggan yang *default* sebagai kelas positif (`positive = "yes"`).  
 
 ```{r}
 # your code here
 
 ```
 
-Dari hasil di atas, dapat disimpulkan bahwa model Decision Tree memiliki performa yang lebih rendah saat memprediksi ke data test. Sebagian besar metrik evaluasinya juga memiliki skor yang hampir sama dengan Model Naive Bayes. 
-
 # Random Forest
 
-Model terakhir yang ingin kita buat adalah Randon Forest. Sekarang, coba eksplorasi model random forest yang telah kami siapkan yaitu `model_rf.RDS`. Model tersebut dibuat menggunakan *hyperparameter* di bawah ini:
+Model terakhir yang ingin kita buat adalah Randon Forest. Di bawah ini merupakan keunggulan dari model Random Forest:
+
+- Automatic feature selection
+- Mereduksi bias pada model karena melakukan aggregasi dari hasil beberapa decision tree
+- Menghasilkan estimasi out-of-box error yang tidak bias
+
+Sekarang, coba eksplorasi model random forest yang telah kami siapkan yaitu `model_rf.RDS`. Model tersebut dibuat menggunakan *hyperparameter* di bawah ini:
 
 - `set.seed(100)` # angka seed
 - `number = 5` # jumlah k-fold cross-validation
@@ -211,20 +217,6 @@ Bacalah model Random Forest tersebut (`model_rf.RDS`)  menggunakan fungsi `readR
 model_rf <-
 ```
 
-___
-5. Di bawah ini manakah yang **BUKAN** keunggulan dari model Random Forest?
-  - [ ] Automatic feature selection
-  - [ ] Pembuatan model cenderung cepat dibandingkan decision tree
-  - [ ] Mereduksi bias pada model karena melakukan aggregasi dari hasil beberapa decision tree
-  - [ ] Menghasilkan estimasi out-of-box error yang tidak bias
-
-*Referensi Opsi Bahasa Inggris:*
-  - [ ] Automatic feature selection
-  - [ ] It is a relatively fast model to compared to decision tree
-  - [ ] Reduce bias in a model as it is the aggregate multiple decision trees
-  - [ ] It generates an unbiased estimate of the out-of-box error
-___
-
 Kemudian, lihatlah rangkuman final model dari model Random Forest menggunakan `model_rf$finalModel`
 
 ```{r}
@@ -233,20 +225,20 @@ library(randomForest)
 
 ```
 
-Dalam praktiknya, random forest telah memiliki estimasi out-of-bag (OOB) yang merepresentasikan akurasi pada *out-of-bag data*.
+Dalam praktiknya, random forest telah memiliki estimasi out-of-bag (OOB) yang merepresentasikan akurasi pada *out-of-bag data* (data yang tidak diambil ketika sampling/tidak digunakan dalam pembuatan random forest).
 
 ___
-6. Berdasarkan ringkasan `model_rf$finalModel` di atas, out-of-bag error dari model adalah 33.61%, hal ini berarti?
+5. Berdasarkan ringkasan `model_rf$finalModel` di atas, bagaimana cara menginterpretasikan out-of-bag error dari model?
   - [ ] Kita memiliki error 33.61% pada *unseen data*
   - [ ] Kita memiliki error 33.61% pada data train
   - [ ] Kita memiliki error 33.61% pada data loan
   - [ ] Kita memiliki error 33.61% pada *in-sample data*
 
 *Referensi Opsi Bahasa Inggris:*
-  - [ ] We have error 33.61% of our unseen data
-  - [ ] We have error 33.61% of our train data
-  - [ ] We have error 33.61% of our loan data
-  - [ ] We have error 33.61% of our in-sample data
+  - [ ] We have 33.61% error of our unseen data
+  - [ ] We have 33.61% error of our train data
+  - [ ] We have 33.61% error of our loan data
+  - [ ] We have 33.61% error of our in-sample data
 ___
 
 Kita juga bisa menggunakan informasi *Variable Importance*, untuk mendapatkan daftar variabel penting yang digunakan pada model Random Forest. Banyak yang berargumen bahwa Random Forest, sebgai model *Black Box*, tidak dapat menawarkan informasi penting lain selain akurasinya yang amat tinggi. Namun, memberikan perhatian khusus pada atribut seperti *Variable Importance* sering kali membantu kita dalam mendapatkan informasi berharga tentang data.
@@ -259,7 +251,7 @@ Tentukan variabel yang memiliki pengaruh penting dalam menghasilkan prediksi (*V
 ```
 
 ___
-7. Dari plot yang terbentuk, variabel mana yang memiliki andil paling tinggi dalam menghasilkan prediksi?
+6. Dari plot yang terbentuk, variabel mana yang memiliki andil paling tinggi dalam menghasilkan prediksi?
   - [ ] checking_balance
   - [ ] months_loan_duration
   - [ ] amount
@@ -268,12 +260,11 @@ ___
 
 # Prediksi Model Random Forest
   
-Setelah membangun model, kini kita dapat memprediksi data train dan data test menggunakan `model_rf`. Gunakan fungsi `predict()` dan atur parameter `type = "raw"` untuk mendapatkan prediksi kelas.
+Setelah membangun model, kini kita dapat memprediksi data test menggunakan `model_rf`. Gunakan fungsi `predict()` dan atur parameter `type = "raw"` untuk mendapatkan prediksi kelas.
 
 ```{r}
 # your code here
-pred_train_rf <-
-pred_test_rf <-
+pred_rf <-
 ```
 
 # Evaluasi Model Random Forest
@@ -285,7 +276,7 @@ Selanjutnya, mari kita evaluasi model random forest dengan fungsi `confusionMatr
 
 ```
 
-Cara lain untuk mengevaluasi performa model adalah dengan melihat nilai ROC dan AUC-nya. Untuk menghitungnya, kita membutuhkan *probabilitas ke kelas positif untuk setiap observasi*. Mari fokus pada nilai ROC dan AUC dari prediksi model Random Forest untuk *data test*. Pertama, lakukan prediksi ke data test menggunakan `model_rf` dengan menggunakan parameter `type = "prob"`. Akan dihasilkan prediksi nilai probabilitas untuk setiap kelas. Anda dapat menyimpan hasil prediksi ke dalam objek `prob_test`. 
+Cara lain untuk mengevaluasi performa model adalah dengan melihat nilai ROC dan AUC-nya. Untuk menghitungnya, kita membutuhkan *probabilitas ke kelas positif untuk setiap observasi*. Mari fokus pada nilai ROC dan AUC dari prediksi model Random Forest. Pertama, lakukan prediksi ke data test menggunakan `model_rf` dengan menggunakan parameter `type = "prob"`. Akan dihasilkan prediksi nilai probabilitas untuk setiap kelas. Anda dapat menyimpan hasil prediksi ke dalam objek `prob_test`. 
 
 ```{r}
 # your code here
@@ -325,20 +316,22 @@ auc <-
 ```
 
 ___
-8. Dari hasil di atas, bagaimana Anda menginterpretasi nilai AUC?
-  - [ ] 95.51% berarti performa model baik, nilai yang mendekati 1 semakin baik
-  - [ ] 95.51% berarti performa model buruk, nilai yang mendekati 0 semakin baik
-  - [ ] 95.51% sebagai nilai *Area under ROC Curve* tidak memberikan informasi apapun terkait performa model
+7. Dari hasil di atas, bagaimana Anda menginterpretasi nilai AUC?
+  - [ ] 90.51% berarti performa model baik, nilai yang mendekati 1 semakin baik
+  - [ ] 90.51% berarti performa model baik dalam mengklasifikasikan kelas postif
+  - [ ] 95.11% berarti performa model baik dalam mengklasifikasikan kelas postif maupun kelas negatif
+  - [ ] 95.11% sebagai *Area under ROC Curve* merepresentasikan akurasi model
 
 *Referensi Opsi Bahasa Inggris:*
-  - [ ] 95.51% means that the model performance is good because the closer to 1 the better
-  - [ ] 95.51% means that the model performance is weak because the closer to 0 the better
-  - [ ] 95.51% as Area under ROC Curve value did not give any information about the model performance
+  - [ ] 90.51% means that the model performance is good because the closer to 1 the better
+  - [ ] 90.51% means that the model performance is good in classifying positive classes
+  - [ ] 95.11% means that the model performance is good in classifying both positive and negative class
+  - [ ] 95.11% as Area under ROC Curve represent the accuracy of the model
 ___
 
 # Komparasi Model
 
-9. Sebagai seorang *data scientist* di sebuah institusi finansial, kita diminta untuk menghasilkan *rule-based model* yang dapat dengan mudah diimplementasikan pada sistem yang sudah ada. Model apa yang paling baik untuk digunakan?
+8. Sebagai seorang *data scientist* di sebuah institusi finansial, kita diminta untuk menghasilkan *rule-based model* yang dapat dengan mudah diimplementasikan pada sistem yang sudah ada. Model apa yang paling baik untuk digunakan?
   - [ ] Naive Bayes karena menghasilkan probabilitas bersyarat yang dihitung dengan baik
   - [ ] Decision Tree karena model mudah ditranslasikan menjadi suatu set aturan prediksi
   - [ ] Random Forest karena dapat dilakukan perunutan balik aturan prediksi berdasarkan informasi *variable importance*. 
@@ -348,7 +341,22 @@ ___
   - [ ] Decision Tree because a decision tree model is easily translatable to a set of rules
   - [ ] Random Forest because it is possible to traceback the rule using variable importance information
   
-10. Dari seluruh model yang telah dibuat, model mana yang memiliki performa paling baik dalam mengidentifikasi nasabah yang beresiko tinggi?
+9. Dari seluruh model yang telah dibuat, model mana yang memiliki performa paling baik dalam mengidentifikasi nasabah yang beresiko tinggi?
   - [ ] Naive Bayes
   - [ ] Decision Tree
   - [ ] Random Forest
+
+Tujuan dari pembuatan model *machine learning* adalah untuk menggeneralisasi pola yang ada pada *data train* agar dapat menerapkannya pada data mana pun yang berasal dari domain (topik masalah) yang sama. Ini memungkinkan kita untuk membuat prediksi pada data baru yang belum pernah dilihat oleh model. Ada terminologi yang digunakan dalam *machine learning* ketika berbicara tentang seberapa baik model belajar dan kemampuannya dalam menggeneralisasi ke data baru, yaitu *overfitting* dan *underfitting*. 
+
+Untuk memvalidasi apakah model kita cukup baik (*good fit*), kita dapat memprediksi ke data train dan test, lalu mengevaluasi performa model di kedua data tersebut. Kita dapat memeriksa apakah performanya seimbang (tidak jauh berbeda pada kedua data) berdasarkan batas toleransi yang telah kita tetapkan. 
+___
+10.  Berdasarkan pengetahuan Anda terkait karakteristik model machine learning, pernyataan manakah di bawah ini yang **SALAH**? 
+  - [ ] Overfitting adalah kondisi dimana model baik dalam memprediksi data train, namun amat buruk dalam memprediksi data test.
+  - [ ] Underfitting adalah kondisi dimana model buruk dalam memprediksi data train, namun baik dalam memprediksi data test.
+  - [ ] Model Machine Learning yang baik mungkin memiliki performa yang sedikit lebih rendah pada data test dibandingkan pada data train. 
+  
+*Referensi Opsi Bahasa Inggris:*
+  - [ ] Overfitting is a condition where a model performs well on the training data but performs very poorly in test data.
+  - [ ] Underfitting is a condition where a model performs poor in the training data but performs well on the test data.
+  - [ ] Machine Learning model that fit just right may have a slightly lower performance in its test data than in its training data.
+___
