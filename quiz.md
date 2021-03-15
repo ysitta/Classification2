@@ -162,7 +162,7 @@ ___
 4. Based on the plot, which of the following interpretation is **TRUE**?
   - [ ] a customer who has `checking_balance` > 200 DM, with `credit_history` labelled "perfect", and `saving_balance` that is "unknown" is expected to default
   - [ ] a customer who has `checking_balance` 1-200 DM, with `months_loan_duration` < 21 is expected to default
-  - [X] a customer who has `checking_balance` that is "unknown", with `other_credit` consist of "store" is expected to default
+  - [ ] a customer who has `checking_balance` that is "unknown", with `other_credit` consist of "store" is expected to default
 ___
 
 # Decision Tree Model Prediction
