@@ -91,6 +91,8 @@ data_train_down <-
 
 ```
 
+> Untuk tahapan selanjutnya, gunakanlah `data_train_down` untuk pembuatan model Naive Bayes, Decision Tree, dan Random Forest.
+
 # Naive Bayes
 
 Setelah membagi data menjadi data train dan test serta melakukan downsample pada data train, mari kita buat model pertama dengan algoritma Naive Bayes. Ada beberapa keuntungan dalam menggunakan model ini, misalnya:

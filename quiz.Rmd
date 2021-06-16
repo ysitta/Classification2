@@ -93,6 +93,8 @@ data_train_down <-
 
 ```
 
+> In the following step, please use `data_train_down` to build Naive Bayes, Decision Tree, and Random Forest model below.
+
 # Naive Bayes
 
 After splitting our data into train and test set and downsample our train data, let us build our first model of Naive Bayes. There are several advantages in using this model, for example:
